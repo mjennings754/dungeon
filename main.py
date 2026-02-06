@@ -22,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_list = []
         self.frame_index = 0
         self.action = 0
+        self.update_time = pygame.time.get_ticks()
         
 
         animation_types = ['idle']
@@ -48,6 +49,15 @@ class Player(pygame.sprite.Sprite):
     def draw(self):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
+    def update_animation(self):
+        ANIMATION_COOLDOWN = 100
+        self.image = self.animation_list[self.action][self.frame_index]
+        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
+            self.update_time = pygame.time.get_ticks()
+            self.frame_index += 1
+        if self.frame_index >= len(self.animation_list[self.action]):
+            self.frame_index = 0
+
 
 player = Player(200, 200, 3, 5)
 running = True
@@ -55,6 +65,7 @@ while running:
     clock.tick(FPS)
     draw_bg()
     player.draw()
+    player.update_animation()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
