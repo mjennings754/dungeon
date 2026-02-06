@@ -14,12 +14,14 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 moving_right = False
 moving_left = False
 
+tile_img = pygame.image.load('images/background/tiles.png').convert_alpha()
+tile_img = pygame.transform.scale(tile_img, (tile_img.get_width() * 3, tile_img.get_height() * 3))
 def draw_bg():
-    screen.fill("#093C27B5")
-    pygame.draw.line(screen, WHITE, (0, 300), (SCREEN_WIDTH, 300))
-
-
-
+    width = tile_img.get_width()
+    height = tile_img.get_height()
+    for x in range(0, screen.get_width(), width):
+        for y in range(0, screen.get_height(), height):
+            screen.blit(tile_img, (x, y))
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed):
         pygame.sprite.Sprite.__init__(self)
@@ -76,8 +78,8 @@ class Player(pygame.sprite.Sprite):
             self.vel_y
         dy += self.vel_y
 
-        if self.rect.bottom + dy > 300:
-            dy = 300 - self.rect.bottom
+        if self.rect.bottom + dy > 600:
+            dy = 600 - self.rect.bottom
             self.in_air = False
 
         self.rect.x += dx
@@ -93,7 +95,7 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
 
 
-player = Player(200, 200, 3, 5)
+player = Player(200, 200, 2, 5)
 
 running = True
 while running:
